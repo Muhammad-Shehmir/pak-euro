@@ -93,7 +93,7 @@
                     <div class="card-body ">
                         <div style="display: flex; justify-content:space-between;" class="p-2">
                             <div class="mb-xl-0 pb-3">
-                                <img src="{{ url('/logo2.png') }}" width="150px" class=" mb-4  app-brand-text fw-bold">
+                                <img src="{{ url('/pak_euro.png') }}" width="100px" class=" mb-4  app-brand-text fw-bold">
                                 <h6 class="mb-1">Bill To:</h6>
                                 <table>
 
@@ -128,7 +128,11 @@
                                     {{-- <span>{{ \Carbon\Carbon::createFromFormat('d/M/Y', $date)->format('d M Y'); }}</span> --}}
                                     <span>{{ \Carbon\Carbon::parse($transaction->date)->format('d M Y') }}</span>
                                 </div>
-
+                                <div class="mt-5">
+                                    <td class="pe-3 fw-medium">Delivery Address:</td>
+                                            <td>{{ $shipment->delivery_address ?? '---' }}</td>
+                                    
+                                </div>
                             </div>
                         </div>
                         <div class="table-responsive p-2">
@@ -136,27 +140,31 @@
                                 <thead>
                                     <tr>
                                         <th style="width: 30px;">S.No</th>
-                                        <th style="width: 30px;">Charges</th>
-                                        <th style="text-align: center">Description</th>
-                                        <th>Rate</th>
+                                        <th style="width: 30px;">Container No</th>
+                                        {{-- <th style="width: 30px;">Charges</th> --}}
+                                        {{-- <th style="text-align: center">Description</th> --}}
+                                        {{-- <th style="text-align: center">Delivery Party</th> --}}
+                                        <th style="width: 30px;">Delivery Party</th>
+                                        <th style="width: 30px;">Rate</th>
                                         <th style="width: 30px;">Quantity</th>
                                         {{-- <th>Discount</th>
                                         <th>Tax</th> --}}
-                                        <th style="text-align: center">Amount</th>
-                                        <th>Converted Amount {{ @$transaction->currency->name }} </th>
+                                        {{-- <th style="text-align: center">Amount</th> --}}
+                                        <th style="width: 30px;">Amount</th>
+                                        <th style="width: 30px;">Converted Amount {{ @$transaction->currency->name }} </th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($transaction->transaction_detail as $index => $item)
                                         <tr>
                                             <td style="width: 30px;">{{ $index + 1 }}</td>
-                                            <td style="width: 30px; text-align: center">{{ @$item->charge->name }}</td>
-                                            <td class="">{{ $item->description ?? '--' }}</td>
-                                            <td class="">{{ (int) $item->rate ?? 0 }}</td>
+                                            <td style="width: 30px; text-align: center">{{ @$shipment->imcont_no }}</td>
+                                            <td class="" style="width: 30px;">{{ @$shipment->delivery_party }}</td>
+                                            <td class="" style="width: 30px;">{{ (int) $item->rate ?? 0 }}</td>
                                             {{-- <td class="">{{ number_format($item->charges, 2, '.', '') }}</td> --}}
-                                            <td style="width: 30px; text-align: center">{{ $item->quantity ?? 1 }}</td>
-                                            <td style="text-align: right">{{ 'PKR ' . $item->amount ?? 0 }}</td>
-                                            <td style="text-align: right">{{ $item->converted_amount ?? 0 }}</td>
+                                            <td style="width: 30px;">{{ $item->quantity ?? 1 }}</td>
+                                            <td style="width: 30px; text-align: right">{{ 'PKR ' . $item->amount ?? 0 }}</td>
+                                            <td style="width: 30px; text-align: right">{{ $item->converted_amount ?? 0 }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>

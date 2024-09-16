@@ -94,6 +94,7 @@ class ShipperController extends Controller
                 'vehicle_and_driver' => $request->vehicle_and_driver,
                 'delivery_status' => $request->delivery_status,
                 'delivery_address' => $request->delivery_address,
+                'delivery_party' => $request->delivery_party,
             ]);
 
             $latest_transaction = Transactions::where('transaction_type_id' , 1)->latest()->first();
@@ -226,6 +227,7 @@ class ShipperController extends Controller
                 'vehicle_and_driver' => $request->vehicle_and_driver,
                 'delivery_status' => $request->delivery_status,
                 'delivery_address' => $request->delivery_address,
+                'delivery_party' => $request->delivery_party,
             ]);
 
 

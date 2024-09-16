@@ -15,6 +15,7 @@ use App\Models\Charge;
 use App\Models\Charges;
 use App\Models\Quote;
 use App\Models\QuoteDetail;
+use App\Models\Shipment;
 use App\Models\Transactions;
 use App\Models\TransactionsDetail;
 use App\Models\Type;
@@ -236,8 +237,9 @@ class InvoiceController extends Controller
     {
         $transaction = Transactions::where('id', $id)->first();
         $charge = Charge::where('id', $id)->first();
+        $shipment = Shipment::where('invoice_no', $transaction->tran_no)->first();
 
-        return view('invoice.preview', compact('transaction', 'charge'));
+        return view('invoice.preview', compact('transaction', 'charge', 'shipment'));
     }
     public function print()
     {
@@ -258,9 +260,10 @@ class InvoiceController extends Controller
         } else {
             $totalAmountPaid = 0;
         }
+        $shipment = Shipment::where('invoice_no', $transaction->tran_no)->first();
         $totalAmountRemaining = $transaction->total_converted_amount - $totalAmountPaid;
         // dd($transaction);
-        $html = view('invoice.pdf', ['transaction' => $transaction, 'totalAmountPaid' => $totalAmountPaid, 'totalAmountRemaining' => $totalAmountRemaining])->render();
+        $html = view('invoice.pdf', ['transaction' => $transaction, 'totalAmountPaid' => $totalAmountPaid, 'totalAmountRemaining' => $totalAmountRemaining, 'shipment' => $shipment ])->render();
         return PDF::loadHtml($html)->download($transaction->clients->name . '-' . Carbon::parse($transaction->date)->format('d-M-Y') . '-' . 'invoice.pdf');
     }
     // $pdf = Pdf::loadview('invoice.pdf', compact('transaction'))->setOptions(['defaultFont' => 'sans-serif']);

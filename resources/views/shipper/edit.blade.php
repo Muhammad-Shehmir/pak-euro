@@ -108,6 +108,10 @@
                                     <input type="text" class="form-control" name="bags" placeholder="Bags"
                                         value="{{ $shipment->bags }}">
                                 </div>
+                                <div class="col-md-3 mb-3">
+                                    <p class="mb-2">Delivery Party</p>
+                                    <input type="text" class="form-control" name="delivery_party" placeholder="Enter Delivery Party" value="{{ @$shipment->delivery_party }}">
+                                </div>
                                 <div class="col-md-3 my-4">
                                     <div class="form-floating form-floating-outline ">
                                         <div class="select2-primary">
@@ -140,6 +144,12 @@
                                         <label for="city">Delivery City</label>
                                     </div>
                                 </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <label for="delivery_address">Delivery Address</label>
+                                        <textarea class="form-control" name="delivery_address" id="delivery_address" rows="3">{{ $shipment->delivery_address }}</textarea>
+                                    </div>
+                                </div>
                                 <div class="col-md-3 mb-3">
                                     <p class="mb-2">FCL</p>
                                     <input type="text" class="form-control" name="fcl" placeholder="Enter FCL"
@@ -154,12 +164,6 @@
                                     <p class="mb-2">EXPC #</p>
                                     <input type="text" class="form-control" name="expc_no" placeholder="EXPC Number"
                                         value="{{ $shipment->expc_no }}">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <div class="form-group">
-                                        <label for="delivery_address">Delivery Address</label>
-                                        <textarea class="form-control" name="delivery_address" id="delivery_address" rows="3">{{ $shipment->delivery_address }}</textarea>
-                                    </div>
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <p class="mb-2">Loading Date</p>

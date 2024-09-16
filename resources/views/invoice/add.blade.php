@@ -30,7 +30,7 @@
                             <div class="row mx-0">
                                 <div class="col-md-7 mb-md-0 mb-4 ps-0">
                                     <div class=" svg-illustration align-items-center gap-2">
-                                        <img src="{{ url('/logo2.png') }}" width="150px"
+                                        <img src="{{ url('/pak_euro.png') }}" width="100px"
                                             class="h4 mb-0  app-brand-text fw-bold">
                                     </div>
                                     {{-- <h4 class="mb-0">Create Invoice</h4> --}}

@@ -116,7 +116,7 @@
                                         <span>Rejected</span>
                                     @endif
                                 </td>
-                                <td scope="row">{{ $shipment->client->name ?? '---' }}</td>
+                                <td scope="row">{{ $shipment->delivery_party ?? '---' }}</td>
                                 <td scope="row">{{ $shipment->vendor->name ?? '---' }}</td>
                                 <td scope="row">
                                     {{ number_format($shipment->carrying_rate, 2) ?? '0.00' }}</td>

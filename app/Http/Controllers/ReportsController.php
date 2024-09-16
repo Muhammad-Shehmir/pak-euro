@@ -81,7 +81,7 @@ class ReportsController extends BaseController
                 ->when(request('date_from') && request('date_to'), function ($query) {
                     $startOfDay = Carbon::parse(request('date_from'))->startOfDay();
                     $endOfDay = Carbon::parse(request('date_to'))->endOfDay();
-                    return $query->whereBetween('created_at', [$startOfDay, $endOfDay]);
+                    return $query->whereBetween('date', [$startOfDay, $endOfDay]);
                 })
                 ->orderby('invoice_no', 'DESC')
                 ->get();
@@ -110,7 +110,7 @@ class ReportsController extends BaseController
                 ->when(request('date_from') && request('date_to'), function ($query) {
                     $startOfDay = Carbon::parse(request('date_from'))->startOfDay();
                     $endOfDay = Carbon::parse(request('date_to'))->endOfDay();
-                    return $query->whereBetween('created_at', [$startOfDay, $endOfDay]);
+                    return $query->whereBetween('date', [$startOfDay, $endOfDay]);
                 })
                 ->orderby('invoice_no', 'DESC')
                 ->get();
@@ -159,7 +159,7 @@ class ReportsController extends BaseController
                 ->when(request('date_from') && request('date_to'), function ($query) {
                     $startOfDay = Carbon::parse(request('date_from'))->startOfDay();
                     $endOfDay = Carbon::parse(request('date_to'))->endOfDay();
-                    return $query->whereBetween('created_at', [$startOfDay, $endOfDay]);
+                    return $query->whereBetween('date', [$startOfDay, $endOfDay]);
                 })->orderBy('created_at', 'desc')->get();
 
             $totalSecurityAmount = 0;

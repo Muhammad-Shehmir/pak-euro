@@ -129,17 +129,17 @@
             <div class="card invoice-preview-card" style="border: none !important">
                 <div class="col-md-6">
                     <div style="display: inline-block !important; vertical-align: top !important; margin-right: 300px;">
-                        <img src="./logo2.png" width="150px" class="mb-2 app-brand-text fw-bold">
+                        <img src="./pak_euro.png" width="100px" class="mb-2 app-brand-text fw-bold">
                     </div>
-                    {{-- <div
+                    <div
                         style="display: inline-block !important; vertical-align: top !important; font-size: 14px !important">
-                        <h5 class="mb-1">FrieghtCare</h5>
-                        <div class="mb-4" style="font-size: 12px !important;">
-                            <span>Sosun Magu, Dharavandhoo,<br> Baa Atoll, Maldives <br> Reg. No: SP-2917/2015 <br> Tin
-                                No: 1067325GST501 <br> Mob. No: +960 760 6409, +960 975 4444 <br> E Mail:
-                                info@blueworlddharavandhoo.com <br> Website: blueworlddharavandhoo.com</span>
-                        </div>
-                    </div> --}}
+                        <h5 class="mb-1">INVOICE # {{ $transaction->tran_no }}</h5>
+                                <div class="mb-4">
+                                    <span class="fw-medium">Date :</span>
+                                    {{-- <span>{{ \Carbon\Carbon::createFromFormat('d/M/Y', $date)->format('d M Y'); }}</span> --}}
+                                    <span>{{ \Carbon\Carbon::parse($transaction->date)->format('d M Y') }}</span>
+                                </div>
+                    </div>
                 </div>
                 {{-- <div class="col-md-6" style="margin-top: 5%">
                         <div style="display: inline-block !important; vertical-align: top !important;">
@@ -149,35 +149,33 @@
                     </div> --}}
                 <div class="card-body">
                     <div style="margin-bottom: 18% !important;">
-                        <h6 style="font-size: 14px !important; text-align:center" class="fw-bold mb-1">Invoice</h6>
+                        {{-- <h6 style="font-size: 14px !important; text-align:center" class="fw-bold mb-1">Invoice</h6> --}}
                         <div class="mb-xl-0 pb-3" style="float: left !important;">
                             <table style="">
                                 <tbody>
                                     <tr>
+                                        <td style="font-size: 14px !important; font-weight: bold !important;"
+                                            class="pe-3 fw-bold">Bill To:</td>
+                                    </tr>
+                                    <tr>
                                         <td style="font-size: 12px !important; font-weight: bold !important;"
-                                            class="pe-3 fw-bold">Client Name:</td>
-                                        <td style="font-size: 12px !important;">
+                                            class="pe-3 fw-bold">Name:</td>
+                                        <td style="font-size: 12px !important; text-transform: capitalize !important;">
                                             {{ optional($transaction->clients)->name }}</td>
                                     </tr>
                                     <tr>
                                         <td style="font-size: 12px !important; font-weight: bold !important;"
-                                            class="pe-3 fw-bold">Address:</td>
-                                        <td style="font-size: 12px !important; text-transform: capitalize !important;">
-                                            {{ optional($transaction->clients)->address }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="font-size: 12px !important; font-weight: bold !important;"
-                                            class="pe-3 fw-bold"> Mobile Number:
+                                            class="pe-3 fw-bold"> Phone#:
                                         </td>
                                         <td style="font-size: 12px !important;">
                                             {{ optional($transaction->clients)->phone_no }}</td>
                                     </tr>
                                     {{-- <tr>
                                         <td style="font-size: 12px !important; font-weight: bold !important;"
-                                            class="pe-3 fw-bold">Source:</td>
+                                            class="pe-3 fw-bold">Delivery Address:</td>
                                         <td style="font-size: 12px !important;">
-                                            {{ optional($transaction->clients)->customer_source }}</td>
-                                    </tr> --}}
+                                            {{ $shipment->delivery_address ?? '--' }}</td>
+                                    </tr>
                                     <tr>
                                         <td style="font-size: 12px !important; font-weight: bold !important;"
                                             class="pe-3 fw-bold"> Invoice Number:
@@ -189,28 +187,32 @@
                                             class="pe-3 fw-bold"> Date:</td>
                                         <td style="font-size: 12px !important;">
                                             {{ \Carbon\Carbon::parse($transaction->date)->format('d M Y') }}</td>
-                                    </tr>
+                                    </tr> --}}
                                 </tbody>
                             </table>
                         </div>
-                        {{-- <div class="mt-0"
+                        <div class="mt-0"
                             style="text-align: right !important; margin-left:76% !important; margin-bottom: 18%">
                             <table style="text-align: right !important">
                                 <tbody>
                                     <tr>
-                                        <td style="font-size: 12px !important;" class="pe-3 fw-bold">Date From:</td>
+                                        {{-- <td style="font-size: 12px !important;" class="pe-3 fw-bold">Date From:</td>
                                         <td style="font-size: 12px !important;">
-                                            {{ Carbon\Carbon::parse($quote->date)->format('d/M/Y') }}</td>
+                                            {{ Carbon\Carbon::parse($quote->date)->format('d/M/Y') }}</td> --}}
+                                            <td style="font-size: 12px !important; font-weight: bold !important;"
+                                            class="pe-3 fw-bold">Delivery Address:</td>
+                                        <td style="font-size: 12px !important; text-transform: capitalize !important;">
+                                            {{ $shipment->delivery_address ?? '---' }}</td>
                                     </tr>
-                                    <tr>
+                                    {{-- <tr>
                                         <td style="font-size: 12px !important;" class="pe-3 fw-bold">Date To:</td>
                                         <td style="font-size: 12px !important;">
                                             {{ Carbon\Carbon::parse($quote->valid_till)->format('d/M/Y') }}</td>
-                                    </tr>
+                                    </tr> --}}
                                 </tbody>
                             </table>
 
-                        </div> --}}
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -223,10 +225,16 @@
                                         S.No</th>
                                     <th
                                         style="font-size: 12px !important; padding-right: 8px !important; background-color: dodgerblue;">
-                                        Charges</th>
+                                        Container No.</th>
+                                    {{-- <th
+                                        style="font-size: 12px !important; padding-right: 8px !important; background-color: dodgerblue;">
+                                        Charges</th> --}}
+                                    {{-- <th
+                                        style="font-size: 12px !important; padding-right: 8px !important; background-color: dodgerblue;">
+                                        Description</th> --}}
                                     <th
                                         style="font-size: 12px !important; padding-right: 8px !important; background-color: dodgerblue;">
-                                        Description</th>
+                                        Delivery Party</th>
                                     <th
                                         style="font-size: 12px !important; padding-right: 8px !important; background-color: dodgerblue;">
                                         Rate</th>
@@ -249,9 +257,9 @@
                                         <td style="font-size: 10px !important; padding-right:10px !important;">
                                             {{ $index + 1 }}</td>
                                         <td style="font-size: 10px !important; padding-right:10px !important;">
-                                            {{ $item->charge->name ?? '--' }}</td>
+                                            {{ $shipment->imcont_no ?? '--' }}</td>
                                         <td style="font-size: 10px !important; padding-right:10px !important;">
-                                            {{ $item->description ?? '--' }}</td>
+                                            {{ $shipment->delivery_party ?? '--' }}</td>
                                         <td style="font-size: 10px !important; padding-right:10px !important;">
                                             {{ number_format($item->rate, 2, '.', '') }}</td>
                                         <td style="font-size: 10px !important; padding-right:10px !important;">
