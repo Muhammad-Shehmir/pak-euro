@@ -195,6 +195,7 @@ Route::get('/security-detail/add', [SecurityDetailController::class, 'add']);
 Route::post('/security-detail/add', [SecurityDetailController::class, 'store'])->name('security.store');
 Route::get('/security-detail/edit/{security_detail}', [SecurityDetailController::class, 'edit']);
 Route::post('/security-detail/edit/{security_detail}', [SecurityDetailController::class, 'update'])->name('security.update');
+Route::post('/security-detail/delete/{id}', [SecurityDetailController::class, 'delete'])->name('security.delete');
 
 //reports
 Route::get('/ledger-reports', [ReportsController::class, 'ledgerIndex']);

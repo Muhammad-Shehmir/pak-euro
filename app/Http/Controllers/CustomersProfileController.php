@@ -49,78 +49,26 @@ class CustomersProfileController extends BaseController
     public function index(Request $request, Clients $customer, LogsController $logController)
     {
         try {
-            $customer = Clients::where('id', $customer->id)->with('relation')->first();
+            $customer = Clients::where('id', $customer->id)->first();
 
-            $relations = RelationshipMaster::all();
-
-            // $procedures = Procedure::all();
-
-            $notes = Notes::with('added_by')->where('customer_id', $customer->id)->get();
-            foreach ($notes as $index => $note) {
-                $noteArr = explode(',', $note->images);
-                $notes[$index]->notes = $noteArr;
-            }
-
-            // $family = Customers::with('relation')->where('customer_head_id', $customer->id)->orWhere('id', $customer->customer_head_id)->get();
-            $family = CustomerFamily::where('customer_id', $customer->id)->get();
             $shipments = Shipment::where('client_id', $customer->id)->orWhere('vendor_id', $customer->id)->orderby('invoice_no', 'DESC')->get();
             //  dd($shipments);
-            $customerdocument = CustomerDocument::where('customer_id', $customer->id)->orderby('id', 'DESC')->get();
-
-            $customerarrivaldeparture = CustomerArrivalDeparture::where('customer_id', $customer->id)->orderby('id', 'DESC')->get();
-
-            // $patient_appointments->each(function ($appointment) {
-            //     $latestPayment = $appointment->payments->sortByDesc('created_at')->first();
-            //     $appointment->latest_payment = $latestPayment;
-
-            //     $latestStatus = $appointment->appointment_status->sortByDesc('created_at')->first();
-            //     $appointment->latest_status = $latestStatus;
-            // });
-
+            
             $transactions = Transactions::where('client_id', $customer->id)->orderby('id', 'DESC')->get();
             // dd($transactions);
             $total_amount_recieved = 0;
             $sum_total_amount = 0;
 
             foreach ($transactions as $detail) {
-                // Convert the total_converted_amount based on the currency_id
-                // switch ($detail->currency_id) {
-                //     case 1:
-                //         $converted_amount = $detail->total_converted_amount / 15.40;
-                //         break;
-                //     case 2:
-                //         $converted_amount = $detail->total_converted_amount * 0.91;
-                //         break;
-                //     case 3:
-                //     default:
-                //         $converted_amount = $detail->total_converted_amount;
-                //         break;
-                // }
                 $sum_total_amount += $detail->total_amount;
 
                 foreach ($detail->payments as $transaction) {
-                    // Convert the amount_paid based on the currency_id
-                    // switch ($detail->currency_id) {
-                    //     case 1:
-                    //         $converted_payment = (int) $transaction['amount_paid'] / 15.40;
-                    //         break;
-                    //     case 2:
-                    //         $converted_payment = (int) $transaction['amount_paid'] * 0.91;
-                    //         break;
-                    //     case 3:
-                    //     default:
-                    //         $converted_payment = (int) $transaction['amount_paid'];
-                    //         break;
-                    // }
-                    // dd($converted_payment);
                     $total_amount_recieved += $transaction->amount_paid;
                 }
             }
 
             $balance = $sum_total_amount - $total_amount_recieved;
             // dd(-$balance);
-
-            $customer_bookings = Booking::where('customer_id', $customer->id)->get();
 
             // $receipt_payments = ReceiptPayment::all();
             $receipt_payments = ReceiptPayment::orderBy('created_at', 'desc')->get();
@@ -151,12 +99,12 @@ class CustomersProfileController extends BaseController
 
             $balanceReceipt = $totalReceipts - $totalPayments;
 
-            $logController->createLog(__METHOD__, 'success', 'Navigated to Customer Profile.', auth()->user(), '');
+            // $logController->createLog(__METHOD__, 'success', 'Navigated to Customer Profile.', auth()->user(), '');
 
-            return view('patient_profile.index', compact('balance', 'customer', 'security_details', 'totalSecurityAmount', 'totalReceipts', 'totalPayments', 'balanceReceipt', 'receipt_payments', 'customer_bookings', 'relations', 'family', 'notes', 'transactions', 'customerarrivaldeparture', 'total_amount_recieved', 'balance', 'customerdocument', 'shipments'));
+            return view('patient_profile.index', compact( 'customer', 'security_details', 'totalSecurityAmount', 'totalReceipts', 'totalPayments', 'balanceReceipt', 'receipt_payments',  'transactions', 'total_amount_recieved', 'balance', 'shipments'));
         } catch (Exception $e) {
             // dd($e);
-            $logController->createLog(__METHOD__, 'error', $e, auth()->user(), '');
+            // $logController->createLog(__METHOD__, 'error', $e, auth()->user(), '');
 
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -165,10 +113,10 @@ class CustomersProfileController extends BaseController
     public function pdf($id)
     {
         // Increase the maximum execution time to 5 minutes
-        ini_set('max_execution_time', 300); // 300 seconds = 5 minutes
+        // ini_set('max_execution_time', 300); // 300 seconds = 5 minutes
 
         $client = Clients::where('id', $id)->first();
-        $shipments = Shipment::where('client_id', $id)->orderby('id', 'DESC')->get();
+        $shipments = Shipment::where('client_id', $id)->orWhere('vendor_id', $id)->orderby('id', 'DESC')->get();
         $transactions = Transactions::with('payments')->where('client_id', $id)->orderby('id', 'DESC')->get();
 
         $total_amount_recieved = 0;

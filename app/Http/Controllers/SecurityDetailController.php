@@ -106,4 +106,18 @@ class SecurityDetailController extends Controller
             return redirect()->back()->with('error', 'Something Went Wrong!');
         }
     }
+
+    
+    public function delete($id)
+    {
+        try {
+            $security_detail = SecurityDetail::find($id);
+            $security_detail->delete();
+
+            return redirect()->to('/client-profile/' . $security_detail->client_id . '?section=receipt')->with('success', 'Record Deleted SuccessFully!');
+        } catch (Exception $e) {
+
+            return redirect('/invoice')->with('error', $e->getMessage());
+        }
+    }
 }

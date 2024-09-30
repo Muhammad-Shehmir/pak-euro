@@ -290,89 +290,16 @@ class InvoiceController extends Controller
     {
         try {
             $transaction = Transactions::find($id);
+            TransactionsDetail::where('transactions_id', $transaction->id)->delete();
+            Payments::where('transaction_id', $transaction->id)->delete();
             $transaction->delete();
 
-            return redirect()->to('/invoice')->with('success', 'Record Deleted SuccessFully!');
+            return redirect()->to('/client-profile/' . $transaction->client_id)->with('success', 'Record Deleted SuccessFully!');
         } catch (Exception $e) {
 
             return redirect('/invoice')->with('error', $e->getMessage());
         }
     }
 
-    // public function createFromQuote(Request $request, LogsController $logController)
-    // {
-    //     try {
-    //         // Retrieve the quote by its ID
-    //         $quote = Quote::findOrFail($request->quote_id);
-    //         $groupDetails = QuoteDetail::where('quote_id', $quote->id)->get();
-    //         // $groupData = $request->group;
-    //         // dd($groupDetails);
-
-    //         $transaction = Transactions::create([
-    //             'customer_id' => $quote->customer_id,
-    //             'customer_type_id' => $quote->customer_type_id,
-    //             'customer_source_id' => $quote->customer_source_id,
-    //             'currency_id' => $quote->currency_id,
-    //             'conversion_rate' => $quote->conversion_rate,
-    //             'sub_total' => $quote->sub_total ?? 0,
-    //             'total_discount_percentage' => $quote->total_discount_percentage ?? 0,
-    //             'total_discount_amount' => $quote->total_discount_amount ?? 0,
-    //             'total_service_charge' => $quote->total_service_charge ?? 0,
-    //             'total_service_charge_amount' => $quote->total_service_charge_amount ?? 0,
-    //             'total_green_tax_percentage' => $quote->total_green_tax_percentage ?? 0,
-    //             'total_green_tax_amount' => $quote->total_green_tax_amount ?? 0,
-    //             'total_tax_percentage' => $quote->total_tax_percentage ?? 0,
-    //             'total_tax_amount' => $quote->total_tax_amount ?? 0,
-    //             // 'card_charges_percentage' => $quote->card_charges_percentage ?? 0,
-    //             // 'card_charges_amount' => $quote->card_charges_amount ?? 0,
-    //             // 'card_charges_converted_amount' => $quote->card_charges_converted_amount ?? 0,
-    //             'total_amount' => $quote->total_amount ?? 0,
-    //             'total_converted_amount' => $quote->total_converted_amount ?? $quote->total_amount,
-    //             'created_by' => $quote->created_by,
-    //             'date' => $quote->date,
-    //             'status' => 1,
-    //         ]);
-
-    //         $payment = Payments::create([
-    //             'transaction_id' => $transaction->id,
-    //             'customer_id' => $quote->customer_id,
-    //             'amount_paid' => $quote->total_amount,
-    //             'payment_mode' => 'cash',
-    //             'remaining_amount' => 0,
-    //             // $transaction->total_converted_amount - $transaction->paid_amount;
-    //             // 'card_charges' => $request->credit_card_input,
-    //         ]);
-
-    //         foreach ($groupDetails as $detail) {
-    //             $transaction_detail = TransactionsDetail::create([
-    //                 'transactions_id' => $transaction->id,
-    //                 'product_id' => @$detail['product_id'],
-    //                 'product_category_id' => @$detail['product_category_id'],
-    //                 // 'persons_rooms' => @$detail['persons_rooms'],
-    //                 // 'days_dives' => @$detail['days_dives'],
-    //                 // 'quantity' => @$detail['quantity'],
-    //                 'charges' => @$detail['charges'],
-    //                 // 'tax' => @$detail['tax'],
-    //                 // 'discount' => @$detail['discount'],
-    //                 'amount' => @$detail['amount'],
-    //                 'converted_amount' => @$detail['converted_amount'],
-    //                 'status' => 1,
-    //             ]);
-    //         }
-
-    //         $logController->createLog(__METHOD__, 'success', 'Transactions Created.', auth()->user(), '');
-
-
-    //         // Flash success message to the session
-    //         Session::flash('success', 'Invoice Created Successfully!');
-
-    //         return response()->json(['success' => true]);
-    //     } catch (Exception $e) {
-    //         // dd($e->getMessage());
-    //         $logController->createLog(__METHOD__, 'error', $e, auth()->user(), '');
-
-    //         return response()->json(['success' => false, 'error' => $e->getMessage()]);
-    //     }
-    // }
-
+ 
 }

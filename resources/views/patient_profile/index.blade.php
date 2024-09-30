@@ -171,7 +171,7 @@
                                                             <a class="btn btn-success me-2 p-2-5"
                                                                 href="{{ url('/invoice/edit/' . $shipment->transaction->id) }}"
                                                                 title="Edit Invoice">
-                                                               Invoice
+                                                                Invoice
                                                             </a>
                                                         @endif
 
@@ -179,7 +179,7 @@
                                                             <a class="btn btn-warning me-2 p-2-5"
                                                                 href="{{ url('/invoice/edit/' . $shipment->bill->id) }}"
                                                                 title="Edit Bill">
-                                                               Bill
+                                                                Bill
                                                             </a>
                                                         @endif
 
@@ -220,10 +220,18 @@
                                                 <td scope="row">{{ @$security_detail->date }}</td>
                                                 <td scope="row">{{ @$security_detail->description }}</td>
                                                 <td scope="row">{{ @$security_detail->amount }}</td>
-                                                <td> <a class="btn btn-primary me-2 p-2-5"
+                                                <td class="d-flex justify-items-center"> <a class="btn btn-primary me-2 p-2-5"
                                                         href="{{ url('/security-detail/edit/' . $security_detail->id) }}"><i
                                                             class="fa fa-edit"></i>
-                                                    </a></td>
+                                                    </a>
+                                                    <form method="post"
+                                                        action="{{ url('/security-detail/delete/' . $security_detail->id) }}">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-danger p-2-5">
+                                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -280,7 +288,8 @@
                                                 class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                                 <div class="me-2">
                                                     <a href="{{ url('/invoice/preview/' . $transaction->id) }}">
-                                                        <h6 class="mb-0">{{ $transaction->type_id == 1 ? 'Invoice #' : 'Bill #' }}{{ $transaction->tran_no }}
+                                                        <h6 class="mb-0">
+                                                            {{ $transaction->type_id == 1 ? 'Invoice #' : 'Bill #' }}{{ $transaction->tran_no }}
                                                         </h6>
                                                         <small
                                                             class="text-muted">{{ \Carbon\Carbon::parse($transaction->created_at)->format('d M Y') }}</small>
@@ -289,10 +298,16 @@
                                                 <div class="badge bg-label-primary rounded-pill">
                                                     {{ $transaction->total_amount }}</div>
                                                 @if ($transaction->status == 1)
+                                                <div class="d-flex align-items-center">
                                                     <a class="btn btn-primary me-2 p-2-5"
                                                         href="{{ url('/invoice/edit/' . $transaction->id) }}"><i
                                                             class="fa fa-edit"></i>
                                                     </a>
+                                                    <a class="btn btn-primary me-2 p-2-5"
+                                                        href="{{ url('/invoice/delete/' . $transaction->id) }}"><i
+                                                            class="fa fa-trash"></i>
+                                                    </a>
+                                                </div>
                                                 @endif
                                             </div>
                                         </li>
@@ -369,7 +384,7 @@
                                                         <span>Rejected</span>
                                                     @endif
                                                 </td>
-                                                <td scope="row">{{ $shipment->client->name ?? '---' }}</td>
+                                                <td scope="row">{{ $shipment->delivery_party ?? '---' }}</td>
                                                 <td scope="row">
                                                     {{ number_format($shipment->carrying_rate, 2) ?? '0.00' }}</td>
                                                 <td scope="row">{{ number_format($shipment->quantity, 2) ?? '0.00' }}
@@ -460,9 +475,9 @@
                                                         <span>Rejected</span>
                                                     @endif
                                                 </td>
-                                                <td scope="row">{{ $shipment->client->name ?? '---' }}</td>
+                                                <td scope="row">{{ $shipment->delivery_party ?? '---' }}</td>
                                                 <td scope="row">
-                                                    {{ number_format($shipment->carrying_rate, 2) ?? '0.00' }}</td>
+                                                    {{ number_format($shipment->rate, 2) ?? '0.00' }}</td>
                                                 <td scope="row">{{ number_format($shipment->quantity, 2) ?? '0.00' }}
                                                 </td>
                                                 <td scope="row">

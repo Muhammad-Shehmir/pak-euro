@@ -7,7 +7,7 @@
     <title>{{ $client->name }} Ledger</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
+
     <style>
         @media print {
             table {
@@ -121,90 +121,189 @@
         </div>
         {{-- <div style="margin-left: 90%;margin-top: 2%;"><b>LEDGER:</b></div> --}}
 
-        <table>
-            <thead>
-                <tr style="text-transform: uppercase; ">
-                    <th>Date</th>
-                    <th>Container No</th>
-                    <th>Delivery Status</th>
-                    <th>Delivery Party</th>
-                    <th>Rate</th>
-                    <th>Weight</th>
-                    <th>Debit</th>
-                    <th>Ewaybill/Invc #</th>
-                    <th>Credit</th>
-                </tr>
-            </thead>
-            <tbody>
-                @php
-                    $totalDebit = 0;
-                    $totalCredit = 0;
-                @endphp
-                @foreach ($shipments as $index => $shipment)
+        @if ($shipment->client->type_id == 1)
+            <table class="table">
+                <thead>
                     <tr>
-                        {{-- <td scope="row">{{ $index }}</td> --}}
-                        <td scope="row">
-                            {{ $shipment->date ? \Carbon\Carbon::parse($shipment->date)->format('d-F-Y') : '' }}
-                        </td>
-                        <td scope="row">{{ $shipment->imcont_no ?? '---' }}</td>
-                        <td scope="row">
-                            @if ($shipment->delivery_status == 1)
-                                <span>Delivered</span>
-                            @elseif ($shipment->delivery_status == 2)
-                                <span>Pending</span>
-                            @else
-                                <span>Rejected</span>
-                            @endif
-                        </td>
-                        <td scope="row">{{ $shipment->client->name ?? '---' }}</td>
-                        <td scope="row">
-                            {{ number_format($shipment->carrying_rate, 2) ?? '0.00' }}</td>
-                        <td scope="row">{{ number_format($shipment->quantity, 2) ?? '0.00' }}
-                        </td>
-                        <td scope="row">
-                            {{ number_format($shipment->transaction->total_amount, 2) ?? '0.00' }}
-                        </td>
-                        <td scope="row">
-                            {{ @$shipment->eway_bill . ' / ' . @$shipment->invoice_no }}</td>
-
-                        @php
-                            $totalPaidAmount = 0;
-                        @endphp
-
-                        @if (isset($shipment->transaction) && $shipment->transaction->payments->isNotEmpty())
-                            @foreach ($shipment->transaction->payments as $payment)
-                                @php
-                                    $totalPaidAmount += $payment->amount_paid;
-                                @endphp
-                            @endforeach
-                        @endif
-
-                        <td scope="row">{{ number_format($totalPaidAmount, 2) }}</td>
+                        {{-- <th>S.No</th> --}}
+                        <th>Date</th>
+                        <th>Container No</th>
+                        <th>Delivery Status</th>
+                        <th>Delivery Party</th>
+                        <th>Rate</th>
+                        <th>Weight</th>
+                        <th>Debit</th>
+                        {{-- <th>Transport Charge</th> --}}
+                        {{-- <th>Date</th> --}}
+                        <th>EWAYBILL / INVC #</th>
+                        <th>Credit</th>
                     </tr>
+                </thead>
+                <tbody>
                     @php
-                        $totalDebit += $shipment->transaction->total_amount;
-                        $totalCredit += $totalPaidAmount;
+                        $totalDebit = 0;
+                        $totalCredit = 0;
                     @endphp
-                @endforeach
-            <tfoot>
-                <tr>
-                    <td scope="row fw-bold" colspan="6">Total</td>
-                    <td scope="row fw-bold" colspan="2">
-                        {{ number_format($totalDebit, 2) ?? '0.00' }}</td>
-                    <td scope="row fw-bold">
-                        {{ number_format($totalCredit, 2) ?? '0.00' }}</td>
-                </tr>
-                <tr>
-                    <td scope="row fw-bold" colspan="8">Total Balance Recievable / Payable</td>
-                    <td scope="row fw-bold" colspan="3">
-                        {{ number_format($totalDebit - $totalCredit, 2) ?? '0.00' }}</td>
-                    {{-- <td scope="row fw-bold">
-                                {{ number_format($totalCredit, 2) ?? '0.00' }}</td> --}}
-                </tr>
-            </tfoot>
+                    @foreach ($shipments as $index => $shipment)
+                        <tr>
+                            {{-- <td scope="row">{{ $index }}</td> --}}
+                            <td scope="row">
+                                {{ $shipment->date ? \Carbon\Carbon::parse($shipment->date)->format('d-F-Y') : '' }}
+                            </td>
+                            <td scope="row">{{ $shipment->imcont_no ?? '---' }}</td>
+                            <td scope="row">
+                                @if ($shipment->delivery_status == 1)
+                                    <span>Delivered</span>
+                                @elseif ($shipment->delivery_status == 2)
+                                    <span>Pending</span>
+                                @else
+                                    <span>Rejected</span>
+                                @endif
+                            </td>
+                            <td scope="row">{{ $shipment->delivery_party ?? '---' }}</td>
+                            <td scope="row">
+                                {{ number_format($shipment->carrying_rate, 2) ?? '0.00' }}</td>
+                            <td scope="row">{{ number_format($shipment->quantity, 2) ?? '0.00' }}
+                            </td>
+                            <td scope="row">
+                                {{ number_format($shipment->transaction->total_amount, 2) ?? '0.00' }}
+                            </td>
+                            {{-- <td scope="row">{{ number_format($shipment->transaction->total_amount, 2) ?? '0.00' }}</td> --}}
+                            {{-- <td scope="row">
+                                                    {{ \Carbon\Carbon::parse($shipment->transaction->date)->format('d-F-Y') ?? '' }}
+                                                </td> --}}
+                            <td scope="row">
+                                {{ @$shipment->eway_bill . ' / ' . @$shipment->invoice_no }}</td>
 
-            </tbody>
-        </table>
+                            @php
+                                $totalPaidAmount = 0;
+                            @endphp
+
+                            @if (isset($shipment->transaction) && $shipment->transaction->payments->isNotEmpty())
+                                @foreach ($shipment->transaction->payments as $payment)
+                                    @php
+                                        $totalPaidAmount += $payment->amount_paid;
+                                    @endphp
+                                @endforeach
+                            @endif
+
+                            <td scope="row">{{ number_format($totalPaidAmount, 2) }}</td>
+                        </tr>
+                        @php
+                            $totalDebit += $shipment->transaction->total_amount;
+                            $totalCredit += $totalPaidAmount;
+                        @endphp
+                    @endforeach
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td scope="row fw-bold" colspan="6">Total</td>
+                        <td scope="row fw-bold" colspan="2">
+                            {{ number_format($totalDebit, 2) ?? '0.00' }}</td>
+                        <td scope="row fw-bold">
+                            {{ number_format($totalCredit, 2) ?? '0.00' }}</td>
+                    </tr>
+                    <tr>
+                        <td scope="row fw-bold" colspan="8">Total Balance Recievable / Payable</td>
+                        <td scope="row fw-bold" colspan="3">
+                            {{ number_format($totalDebit - $totalCredit, 2) ?? '0.00' }}</td>
+                        {{-- <td scope="row fw-bold">
+                                                {{ number_format($totalCredit, 2) ?? '0.00' }}</td> --}}
+                    </tr>
+                </tfoot>
+            </table>
+        @elseif($shipment->client->type_id == 2)
+            <table class="table">
+                <thead>
+                    <tr>
+                        {{-- <th>S.No</th> --}}
+                        <th>Date</th>
+                        <th>Container No</th>
+                        <th>Delivery Status</th>
+                        <th>Delivery Party</th>
+                        <th>Rate</th>
+                        <th>Weight</th>
+                        <th>Debit</th>
+                        {{-- <th>Transport Charge</th> --}}
+                        {{-- <th>Date</th> --}}
+                        <th>EWAYBILL / INVC #</th>
+                        <th>Credit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                        $totalDebit = 0;
+                        $totalCredit = 0;
+                    @endphp
+                    @foreach ($shipments as $index => $shipment)
+                        <tr>
+                            {{-- <td scope="row">{{ $index }}</td> --}}
+                            <td scope="row">
+                                {{ $shipment->date ? \Carbon\Carbon::parse($shipment->date)->format('d-F-Y') : '' }}
+                            </td>
+                            <td scope="row">{{ $shipment->imcont_no ?? '---' }}</td>
+                            <td scope="row">
+                                @if ($shipment->delivery_status == 1)
+                                    <span>Delivered</span>
+                                @elseif ($shipment->delivery_status == 2)
+                                    <span>Pending</span>
+                                @else
+                                    <span>Rejected</span>
+                                @endif
+                            </td>
+                            <td scope="row">{{ $shipment->delivery_party ?? '---' }}</td>
+                            <td scope="row">
+                                {{ number_format($shipment->rate, 2) ?? '0.00' }}</td>
+                            <td scope="row">{{ number_format($shipment->quantity, 2) ?? '0.00' }}
+                            </td>
+                            <td scope="row">
+                                {{ number_format($shipment->bill->total_amount, 2) ?? '0.00' }}
+                            </td>
+                            {{-- <td scope="row">{{ number_format($shipment->bill->total_amount, 2) ?? '0.00' }}</td> --}}
+                            {{-- <td scope="row">
+                                                    {{ \Carbon\Carbon::parse($shipment->bill->date)->format('d-F-Y') ?? '' }}
+                                                </td> --}}
+                            <td scope="row">
+                                {{ @$shipment->eway_bill . ' / ' . @$shipment->invoice_no }}</td>
+
+                            @php
+                                $totalPaidAmount = 0;
+                            @endphp
+
+                            @if (isset($shipment->bill) && $shipment->bill->payments->isNotEmpty())
+                                @foreach ($shipment->bill->payments as $payment)
+                                    @php
+                                        $totalPaidAmount += $payment->amount_paid;
+                                    @endphp
+                                @endforeach
+                            @endif
+
+                            <td scope="row">{{ number_format($totalPaidAmount, 2) }}</td>
+                        </tr>
+                        @php
+                            $totalDebit += $shipment->bill->total_amount;
+                            $totalCredit += $totalPaidAmount;
+                        @endphp
+                    @endforeach
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td scope="row fw-bold" colspan="6">Total</td>
+                        <td scope="row fw-bold" colspan="2">
+                            {{ number_format($totalDebit, 2) ?? '0.00' }}</td>
+                        <td scope="row fw-bold">
+                            {{ number_format($totalCredit, 2) ?? '0.00' }}</td>
+                    </tr>
+                    <tr>
+                        <td scope="row fw-bold" colspan="8">Total Balance Recievable / Payable</td>
+                        <td scope="row fw-bold" colspan="3">
+                            {{ number_format($totalDebit - $totalCredit, 2) ?? '0.00' }}</td>
+                        {{-- <td scope="row fw-bold">
+                                                {{ number_format($totalCredit, 2) ?? '0.00' }}</td> --}}
+                    </tr>
+                </tfoot>
+            </table>
+        @endif
 
 
 
