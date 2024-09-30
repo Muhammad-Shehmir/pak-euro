@@ -123,9 +123,9 @@
                                 <td scope="row">{{ number_format($shipment->quantity, 2) ?? '0.00' }}
                                 </td>
                                 <td scope="row">
-                                    {{ number_format($shipment->bill->total_amount, 2) ?? '0.00' }}
+                                    {{ number_format(@$shipment->bill->total_amount, 2) ?? '0.00' }}
                                 </td>
-                                {{-- <td scope="row">{{ number_format($shipment->bill->total_amount, 2) ?? '0.00' }}</td> --}}
+                                {{-- <td scope="row">{{ number_format(@$shipment->bill->total_amount, 2) ?? '0.00' }}</td> --}}
                                 {{-- <td scope="row">
                                         {{ \Carbon\Carbon::parse($shipment->bill->date)->format('d-F-Y') ?? '' }}
                                     </td> --}}
@@ -147,7 +147,7 @@
                                 <td scope="row">{{ number_format($totalPaidAmount, 2) }}</td>
                             </tr>
                             @php
-                                $totalDebit += $shipment->bill->total_amount;
+                                $totalDebit += @$shipment->bill->total_amount;
                                 $totalCredit += $totalPaidAmount;
                             @endphp
                         @endforeach

@@ -192,16 +192,16 @@
                             </table>
                         </div>
                         <div class="mt-0"
-                            style="text-align: right !important; margin-left:76% !important; margin-bottom: 18%">
+                            style="text-align: right !important; margin-left:60% !important; margin-bottom: 18%">
                             <table style="text-align: right !important">
                                 <tbody>
                                     <tr>
                                         {{-- <td style="font-size: 12px !important;" class="pe-3 fw-bold">Date From:</td>
                                         <td style="font-size: 12px !important;">
                                             {{ Carbon\Carbon::parse($quote->date)->format('d/M/Y') }}</td> --}}
-                                            <td style="font-size: 12px !important; font-weight: bold !important;"
+                                            <td style="font-size: 12px !important; font-weight: bold !important; white-space: nowrap;"
                                             class="pe-3 fw-bold">Delivery Address:</td>
-                                        <td style="font-size: 12px !important; text-transform: capitalize !important;">
+                                        <td style="font-size: 12px !important; text-transform: capitalize !important; ">
                                             {{ $shipment->delivery_address ?? '---' }}</td>
                                     </tr>
                                     {{-- <tr>

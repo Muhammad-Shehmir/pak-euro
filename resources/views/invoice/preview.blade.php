@@ -121,7 +121,7 @@
                                     2</p>
                                 <p class="mb-0"><i class="mdi mdi-phone me-2"></i>02134555141, 03219257079</p> --}}
                             </div>
-                            <div class="mt-3">
+                            <div class="mt-3" style="margin-left: 460px;">
                                 <h5 class="mb-1">INVOICE # {{ $transaction->tran_no }}</h5>
                                 <div class="mb-4">
                                     <span class="fw-medium">Date :</span>

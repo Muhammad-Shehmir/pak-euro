@@ -7,7 +7,7 @@
     <title>{{ $client->name }} Ledger</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
+    
     <style>
         @media print {
             table {
@@ -121,7 +121,7 @@
         </div>
         {{-- <div style="margin-left: 90%;margin-top: 2%;"><b>LEDGER:</b></div> --}}
 
-        @if ($shipment->client->type_id == 1)
+        @if ($client->type_id == 1)
             <table class="table">
                 <thead>
                     <tr>
@@ -182,7 +182,7 @@
                             @if (isset($shipment->transaction) && $shipment->transaction->payments->isNotEmpty())
                                 @foreach ($shipment->transaction->payments as $payment)
                                     @php
-                                        $totalPaidAmount += $payment->amount_paid;
+                                        $totalPaidAmount += (int) $payment->amount_paid;
                                     @endphp
                                 @endforeach
                             @endif
@@ -190,7 +190,7 @@
                             <td scope="row">{{ number_format($totalPaidAmount, 2) }}</td>
                         </tr>
                         @php
-                            $totalDebit += $shipment->transaction->total_amount;
+                            $totalDebit += (int) $shipment->transaction->total_amount;
                             $totalCredit += $totalPaidAmount;
                         @endphp
                     @endforeach
@@ -212,7 +212,7 @@
                     </tr>
                 </tfoot>
             </table>
-        @elseif($shipment->client->type_id == 2)
+        @elseif($client->type_id == 2)
             <table class="table">
                 <thead>
                     <tr>
@@ -273,7 +273,7 @@
                             @if (isset($shipment->bill) && $shipment->bill->payments->isNotEmpty())
                                 @foreach ($shipment->bill->payments as $payment)
                                     @php
-                                        $totalPaidAmount += $payment->amount_paid;
+                                        $totalPaidAmount += (int) $payment->amount_paid;
                                     @endphp
                                 @endforeach
                             @endif
@@ -281,7 +281,7 @@
                             <td scope="row">{{ number_format($totalPaidAmount, 2) }}</td>
                         </tr>
                         @php
-                            $totalDebit += $shipment->bill->total_amount;
+                            $totalDebit += (int) $shipment->bill->total_amount;
                             $totalCredit += $totalPaidAmount;
                         @endphp
                     @endforeach

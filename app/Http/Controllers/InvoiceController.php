@@ -41,7 +41,7 @@ class InvoiceController extends Controller
         })->orderby('id', 'desc')->paginate($perPage);
 
         foreach ($transactions as $transaction) {
-            $transaction->paid_amount = $transaction->payments->pluck('amount_paid')->sum();
+            $transaction->paid_amount = (int) $transaction->payments->pluck('amount_paid')->sum();
             $transaction->remaining_amount = $transaction->total_converted_amount - $transaction->paid_amount;
         }
         // dd($transaction->total_converted_amount);
@@ -144,12 +144,12 @@ class InvoiceController extends Controller
         $transaction_details = TransactionsDetail::where('transactions_id', $transaction->id)->get();
 
         if ($transaction) {
-            $totalAmountPaid = $transaction->payments->pluck('amount_paid')->sum();
+            $totalAmountPaid = (int) $transaction->payments->pluck('amount_paid')->sum();
         } else {
             $totalAmountPaid = 0;
         }
 
-        $difference = $transaction->total_amount - $totalAmountPaid;
+        $difference = (int) $transaction->total_amount - $totalAmountPaid;
 
         if ($difference >= 0) {
             $totalAmountRemaining = $difference;

@@ -233,7 +233,7 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-md-5">
-                                                    <input type="text" name="payment" class="form-control"
+                                                    <input type="number" name="payment" class="form-control"
                                                         id="payment" placeholder="Amount" />
                                                 </div>
                                             </div>
@@ -339,7 +339,7 @@
                                 @foreach (@$transaction->payments as $payment)
                                     <tr>
                                         <td>{{ $payment->created_at }}</td>
-                                        <td>{{ number_format($payment->amount_paid, 2, '.', '') }}</td>
+                                        <td>{{ number_format((int) $payment->amount_paid, 2, '.', '') }}</td>
                                         {{-- <td>{{ number_format($payment->remaining_amount, 2, '.', '') }}</td> --}}
                                     </tr>
                                 @endforeach

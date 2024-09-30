@@ -220,11 +220,11 @@
                                                 <td scope="row">{{ @$security_detail->date }}</td>
                                                 <td scope="row">{{ @$security_detail->description }}</td>
                                                 <td scope="row">{{ @$security_detail->amount }}</td>
-                                                <td class="d-flex justify-items-center"> <a class="btn btn-primary me-2 p-2-5"
+                                                <td class="d-flex align-items-center"> <a class="btn btn-primary me-2 p-2-5"
                                                         href="{{ url('/security-detail/edit/' . $security_detail->id) }}"><i
                                                             class="fa fa-edit"></i>
                                                     </a>
-                                                    <form method="post"
+                                                    <form method="post" class="mb-0"
                                                         action="{{ url('/security-detail/delete/' . $security_detail->id) }}">
                                                         @csrf
                                                         <button type="submit" class="btn btn-danger p-2-5">
@@ -303,10 +303,13 @@
                                                         href="{{ url('/invoice/edit/' . $transaction->id) }}"><i
                                                             class="fa fa-edit"></i>
                                                     </a>
-                                                    <a class="btn btn-primary me-2 p-2-5"
-                                                        href="{{ url('/invoice/delete/' . $transaction->id) }}"><i
-                                                            class="fa fa-trash"></i>
-                                                    </a>
+                                                      <form method="post" class="mb-0"
+                                                        action="{{ url('/invoice/delete/' . $transaction->id) }}">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-danger p-2-5">
+                                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                                        </button>
+                                                    </form>
                                                 </div>
                                                 @endif
                                             </div>
@@ -390,9 +393,9 @@
                                                 <td scope="row">{{ number_format($shipment->quantity, 2) ?? '0.00' }}
                                                 </td>
                                                 <td scope="row">
-                                                    {{ number_format($shipment->transaction->total_amount, 2) ?? '0.00' }}
+                                                    {{ number_format(@$shipment->transaction->total_amount, 2) ?? '0.00' }}
                                                 </td>
-                                                {{-- <td scope="row">{{ number_format($shipment->transaction->total_amount, 2) ?? '0.00' }}</td> --}}
+                                                {{-- <td scope="row">{{ number_format(@$shipment->transaction->total_amount, 2) ?? '0.00' }}</td> --}}
                                                 {{-- <td scope="row">
                                                     {{ \Carbon\Carbon::parse($shipment->transaction->date)->format('d-F-Y') ?? '' }}
                                                 </td> --}}
@@ -406,7 +409,7 @@
                                                 @if (isset($shipment->transaction) && $shipment->transaction->payments->isNotEmpty())
                                                     @foreach ($shipment->transaction->payments as $payment)
                                                         @php
-                                                            $totalPaidAmount += $payment->amount_paid;
+                                                            $totalPaidAmount += (int) $payment->amount_paid;
                                                         @endphp
                                                     @endforeach
                                                 @endif
@@ -414,8 +417,8 @@
                                                 <td scope="row">{{ number_format($totalPaidAmount, 2) }}</td>
                                             </tr>
                                             @php
-                                                $totalDebit += $shipment->transaction->total_amount;
-                                                $totalCredit += $totalPaidAmount;
+                                                $totalDebit += (int) $shipment->transaction->total_amount ?? 0;
+                                                $totalCredit += (int) $totalPaidAmount;
                                             @endphp
                                         @endforeach
                                     </tbody>
@@ -497,7 +500,7 @@
                                                 @if (isset($shipment->bill) && $shipment->bill->payments->isNotEmpty())
                                                     @foreach ($shipment->bill->payments as $payment)
                                                         @php
-                                                            $totalPaidAmount += $payment->amount_paid;
+                                                            $totalPaidAmount += (int) $payment->amount_paid;
                                                         @endphp
                                                     @endforeach
                                                 @endif
@@ -505,8 +508,8 @@
                                                 <td scope="row">{{ number_format($totalPaidAmount, 2) }}</td>
                                             </tr>
                                             @php
-                                                $totalDebit += $shipment->bill->total_amount;
-                                                $totalCredit += $totalPaidAmount;
+                                                $totalDebit += (int) $shipment->bill->total_amount;
+                                                $totalCredit += (int) $totalPaidAmount;
                                             @endphp
                                         @endforeach
                                     </tbody>
@@ -587,6 +590,7 @@
                                                     {{ number_format(-$security_detail->amount, 2) ?? '0.00' }}
                                                 @endif
                                             </td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                                 <tfoot>
